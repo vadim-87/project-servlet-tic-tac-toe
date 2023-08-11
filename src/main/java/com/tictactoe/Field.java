@@ -1,5 +1,6 @@
 package com.tictactoe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,17 +27,27 @@ public class Field {
     }
 
     public int getEmptyFieldIndex() {
-        return field.entrySet().stream()
-                .filter(e -> e.getValue() == Sign.EMPTY)
-                .map(Map.Entry::getKey)
-                .findFirst().orElse(-1);
+        for (Map.Entry<Integer, Sign> e : field.entrySet()) {
+            if (e.getValue() == Sign.EMPTY) {
+                Integer key = e.getKey();
+                return key;
+            }
+        }
+        return -1;
     }
 
     public List<Sign> getFieldData() {
-        return field.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+        List<Map.Entry<Integer, Sign>> toSort = new ArrayList<>();
+        for (Map.Entry<Integer, Sign> integerSignEntry : field.entrySet()) {
+            toSort.add(integerSignEntry);
+        }
+        toSort.sort(Map.Entry.comparingByKey());
+        List<Sign> list = new ArrayList<>();
+        for (Map.Entry<Integer, Sign> integerSignEntry : toSort) {
+            Sign value = integerSignEntry.getValue();
+            list.add(value);
+        }
+        return list;
     }
 
     public Sign checkWin() {
